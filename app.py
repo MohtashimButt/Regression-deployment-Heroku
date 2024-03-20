@@ -4,21 +4,25 @@ import pickle
 from model import CustomLinearRegression
 
 app = Flask(__name__)
-model = pickle.load(open("linear_regression_model.pkl", "rb"))
+model = pickle.load(open('model.pkl', 'rb'))
 
 @app.route('/')
 def home():
-    return render_template("index.html")
+    return render_template('index.html')
 
-@app.route("/predict", methods=["POST"])
+@app.route('/predict',methods=['POST'])
 def predict():
+    '''
+    For rendering results on HTML GUI
+    '''
     int_features = [int(x) for x in request.form.values()]
     final_features = [np.array(int_features)]
     prediction = model.predict(final_features)
 
     output = round(prediction[0], 2)
 
-    return render_template('index.html', prediction_text='Chances of getting into grad school is: $ {}'.format(output))
+    return render_template('index.html', prediction_text='Chances of you going to Grad school are: {}%'.format(output))
 
-if __name__ == "main":
+
+if __name__ == "__main__":
     app.run(debug=True)
